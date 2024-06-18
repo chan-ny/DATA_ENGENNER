@@ -18,3 +18,37 @@ services:
 
 volumes:
   my_dbdata_postgres:
+
+
+# install pgadmin also
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: some-postgres
+    environment:
+      POSTGRES_PASSWORD: postgres@234
+    ports:
+      - "5431:5432"
+    volumes:
+      - my_dbdata_postgres:/var/lib/postgresql/data
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: some-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin@234
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  my_dbdata_postgres:
+  pgadmin_data:
